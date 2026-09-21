@@ -28,9 +28,9 @@ echo ""
 
 # Configuration Setup
 GOST_PORT=8796
-# Tunnel / Cloudflare Warp / Updated WebSocket endpoint (Own Railway Domain)
+# Railway WebSocket Tunnel Endpoint
 GOST_HOST="gost-production-2fc2.up.railway.app"
-FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
+FULL_URL="mwss://sudo:sudo@${GOST_HOST}:443"
 
 # Fix System DNS Resolver
 echo "nameserver 1.1.1.1" > /etc/resolv.conf 2>/dev/null
@@ -70,8 +70,8 @@ docker run -d --net=host --restart unless-stopped \
 
 sleep 2
 
-# Profile Config (Environment Variables)
-NO_PROXY_LIST="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net"
+# Profile Config (Environment Variables + Direct Github Bypass)
+NO_PROXY_LIST="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net,raw.githubusercontent.com,github.com"
 
 cat > /etc/profile.d/daytona-net.sh << EOF
 export HTTP_PROXY=http://127.0.0.1:${GOST_PORT}
