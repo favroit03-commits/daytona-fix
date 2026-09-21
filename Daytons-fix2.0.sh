@@ -70,8 +70,8 @@ docker run -d --net=host --restart unless-stopped \
 
 sleep 2
 
-# Profile Config (Environment Variables + Image Downloading Bypass Fix)
-NO_PROXY_LIST="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net,raw.githubusercontent.com,github.com,cloud-images.ubuntu.com,dl-cdn.alpinelinux.org,download.fedoraproject.org,repo.almalinux.org"
+# Profile Config (Completely Fixed Domain Wildcards for Ubuntu / Debian / Alpine / RedHat mirrors)
+NO_PROXY_LIST="localhost,127.0.0.1,::1,ubuntu.com,.ubuntu.com,cloud-images.ubuntu.com,archive.ubuntu.com,security.ubuntu.com,debian.org,.debian.org,deb.debian.org,security.debian.org,snapshot.debian.org,ppas.launchpadcontent.net,raw.githubusercontent.com,github.com,dl-cdn.alpinelinux.org,download.fedoraproject.org,repo.almalinux.org,rockylinux.org,.rockylinux.org"
 
 cat > /etc/profile.d/daytona-net.sh << EOF
 export HTTP_PROXY=http://127.0.0.1:${GOST_PORT}
