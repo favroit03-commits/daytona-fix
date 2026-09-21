@@ -6,7 +6,7 @@ echo -e "\033[1;36m"
 echo " ⣏⡱ ⡀⢀ ⣀⡀ ⢀⣀ ⢀⣀ ⢀⣀ ⠄ ⣀⡀ ⢀⡀   ⡏⢱ ⢀⣀ ⡀⢀ ⣰⡀ ⢀⡀ ⣀⡀ ⢀⣀   ⡷⣸ ⢀⡀ ⣰⡀ ⡀ ⢀ ⢀⡀ ⡀⣀ ⡇⡠"
 echo " ⠧⠜ ⣑⡺ ⡧⠜ ⠣⠼ ⠭⠕ ⠭⠕ ⠇ ⠇⠸ ⣑⡺   ⠧⠜ ⠣⠼ ⣑⡺ ⠘⠤ ⠣⠜ ⠇⠸ ⠣⠼   ⠇⠹ ⠣⠭ ⠘⠤ ⠱⠱⠃ ⠣⠜ ⠏  ⠏⠢"
 echo ""
-echo "                        Updated Network Fix v2.0"
+echo "                   Updated by Real Daddy G Made By Nafi Gamer"
 echo -e "\033[0m"
 echo ""
 
@@ -28,8 +28,8 @@ echo ""
 
 # Configuration Setup
 GOST_PORT=8796
-# Tunnel / Cloudflare Warp / Updated WebSocket endpoint
-GOST_HOST="gost-docker-production-abc5.up.railway.app"
+# Tunnel / Cloudflare Warp / Updated WebSocket endpoint (Own Railway Domain)
+GOST_HOST="gost-production-2fc2.up.railway.app"
 FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
 
 # Fix System DNS Resolver
@@ -118,7 +118,7 @@ echo ""
 echo -e "\033[1;32m[✓] Network Bypass Configured Successfully!\033[0m"
 echo ""
 echo -e "\033[1;33m╔════════════════════════════════════════════════════════╗\033[0m"
-echo -e "\033[1;33m║\033[0m  \033[1;31m⚠ Apply changes to current session:\033[0m                   \033[1;33m║\033[0m"
+echo -e "\033[1;33m║\033[0m  \033[1;31m⚠ Apply changes to current session:\033[0m                    \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m  \033[1;36msource /etc/profile.d/daytona-net.sh\033[0m                  \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
