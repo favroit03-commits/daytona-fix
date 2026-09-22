@@ -1,56 +1,143 @@
-cd /daytona-fix
+#!/bin/bash
 
-python3 - <<'PY'
-from pathlib import Path
-import shutil
-import subprocess
+clear 2>/dev/null || printf "\033[2J\033[H"
 
-path = Path("Daytona-Fix3.0.sh")
-original = path.read_text()
+echo -e "\033[1;36m"
+echo " ⣏⡱ ⡀⢀ ⣀⡀ ⢀⣀ ⢀⣀ ⢀⣀ ⠄ ⣀⡀ ⢀⡀  ⡏⢱ ⢀⣀ ⡀⢀ ⣰⡀ ⢀⡀ ⣀⡀ ⢀⣀  ⡷⣸ ⢀⡀ ⣰⡀ ⡀ ⢀ ⢀⡀ ⡀⣀ ⡇⡠"
+echo " ⠧⠜ ⣑⡺ ⡧⠜ ⠣⠼ ⠭⠕ ⠭⠕ ⠇ ⠇⠸ ⣑⡺  ⠧⠜ ⠣⠼ ⣑⡺ ⠘⠤ ⠣⠜ ⠇⠸ ⠣⠼  ⠇⠹ ⠣⠭ ⠘⠤ ⠱⠱⠃ ⠣⠜ ⠏ ⠏⠢"
+echo ""
+echo "                        Made By nafigamer"
+echo -e "\033[0m"
+echo ""
 
-start = '[[ -r /dev/tty ]] || die "Run from an interactive terminal."'
-end = 'unset USER_ENC PASS_ENC'
+echo -ne "\033[1;36m[ \033[0m"
+colors=("\033[1;31m" "\033[1;33m" "\033[1;32m" "\033[1;36m" "\033[1;35m" "\033[1;34m")
+text="Bypassing Daytona Network"
+for (( i=0; i<${#text}; i++ )); do
+    color=${colors[$((i % 6))]}
+    echo -ne "${color}${text:$i:1}\033[0m"
+    sleep 0.05
+done
+echo -ne "\033[1;36m ]\033[0m"
 
-if original.count(start) != 1 or original.count(end) != 1:
-    raise SystemExit("Expected block nahi mila; file unchanged.")
+for i in {1..5}; do
+    sleep 0.4
+    echo -ne "\033[1;33m.\033[0m"
+done
+echo ""
 
-begin = original.index(start)
-finish = original.index(end, begin) + len(end)
+# Updated GOST Host Domain
+GOST_HOST="gost-production-2fc2.up.railway.app"
+GOST_PORT=8796
+FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
 
-replacement = r'''# Non-interactive: credentials are optional, but must be supplied together.
-GOST_USER="${GOST_USER:-}"
-GOST_PASS="${GOST_PASS:-}"
+command -v docker &>/dev/null || curl -fsSL https://get.docker.com | sh &>/dev/null 2>&1
 
-if [[ -n "$GOST_USER" && -z "$GOST_PASS" ]] ||
-   [[ -z "$GOST_USER" && -n "$GOST_PASS" ]]; then
-    die "Set both GOST_USER and GOST_PASS, or leave both empty."
+dockerd &>/dev/null 2>&1 &
+sleep 3
+
+apt update -y &>/dev/null 2>&1
+apt install -y qemu-system cloud-image-utils wget lsof curl bash &>/dev/null 2>&1
+
+cat > /usr/local/bin/qemu-system-x86_64 << 'QWRAP'
+#!/bin/bash
+args=()
+for arg in "$@"; do
+  [[ "$arg" == "-no-hpet" ]] && continue
+  args+=("$arg")
+done
+exec /usr/bin/qemu-system-x86_64 "${args[@]}"
+QWRAP
+chmod +x /usr/local/bin/qemu-system-x86_64
+
+docker rm -f gost-bridge &>/dev/null 2>&1
+docker pull ginuerzh/gost:latest &>/dev/null 2>&1
+docker run -d --net=host --restart unless-stopped \
+  --name gost-bridge \
+  ginuerzh/gost:latest \
+  -L=:$GOST_PORT \
+  -F="$FULL_URL" &>/dev/null 2>&1
+sleep 3
+
+cat > /etc/profile.d/daytona-net.sh << EOF
+export HTTP_PROXY=http://127.0.0.1:${GOST_PORT}
+export HTTPS_PROXY=http://127.0.0.1:${GOST_PORT}
+export http_proxy=http://127.0.0.1:${GOST_PORT}
+export https_proxy=http://127.0.0.1:${GOST_PORT}
+export NO_PROXY=localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+export no_proxy=localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+EOF
+chmod +x /etc/profile.d/daytona-net.sh
+
+cat > /etc/environment << 'EOF'
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+HTTP_PROXY=http://127.0.0.1:8796
+HTTPS_PROXY=http://127.0.0.1:8796
+http_proxy=http://127.0.0.1:8796
+https_proxy=http://127.0.0.1:8796
+NO_PROXY=localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+no_proxy=localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+EOF
+
+cat > /etc/sudoers.d/proxy << 'EOFP'
+Defaults env_keep += "HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy"
+EOFP
+chmod 440 /etc/sudoers.d/proxy
+
+for rc in /etc/bash.bashrc /etc/skel/.bashrc /root/.bashrc; do
+    if [ -f "$rc" ]; then
+        grep -q "daytona-net.sh" "$rc" 2>/dev/null || echo "source /etc/profile.d/daytona-net.sh 2>/dev/null" >> "$rc"
+    fi
+done
+
+for user_home in /home/*; do
+    if [ -d "$user_home" ]; then
+        grep -q "daytona-net.sh" "$user_home/.bashrc" 2>/dev/null || echo "source /etc/profile.d/daytona-net.sh 2>/dev/null" >> "$user_home/.bashrc"
+        grep -q "daytona-net.sh" "$user_home/.profile" 2>/dev/null || echo "source /etc/profile.d/daytona-net.sh 2>/dev/null" >> "$user_home/.profile"
+    fi
+done
+
+if [ -f /etc/zsh/zshrc ]; then
+    grep -q "daytona-net.sh" /etc/zsh/zshrc 2>/dev/null || echo "source /etc/profile.d/daytona-net.sh 2>/dev/null" >> /etc/zsh/zshrc
 fi
 
-encode_component() {
-    python3 -c \
-        'import sys; from urllib.parse import quote; print(quote(sys.stdin.read(), safe=""))'
-}
+mkdir -p /etc/fish/conf.d 2>/dev/null
+cat > /etc/fish/conf.d/daytona-net.fish << FISHCONF
+set -gx HTTP_PROXY http://127.0.0.1:${GOST_PORT}
+set -gx HTTPS_PROXY http://127.0.0.1:${GOST_PORT}
+set -gx http_proxy http://127.0.0.1:${GOST_PORT}
+set -gx https_proxy http://127.0.0.1:${GOST_PORT}
+set -gx NO_PROXY localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+set -gx no_proxy localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net
+FISHCONF
 
-FORWARD="mwss://${HOST}:443?secure=true&path=/ws"
-
-if [[ -n "$GOST_USER" ]]; then
-    USER_ENC="$(printf '%s' "$GOST_USER" | encode_component)"
-    PASS_ENC="$(printf '%s' "$GOST_PASS" | encode_component)"
-    FORWARD="mwss://${USER_ENC}:${PASS_ENC}@${HOST}:443?secure=true&path=/ws"
+if [ -f /etc/rc.local ]; then
+  sed -i '/gost-bridge/d; /dockerd/d' /etc/rc.local &>/dev/null
+else
+  echo '#!/bin/sh' > /etc/rc.local
+  chmod +x /etc/rc.local
 fi
+sed -i '/^exit 0/i dockerd &>/dev/null &' /etc/rc.local &>/dev/null
+sed -i '/^exit 0/i docker start gost-bridge 2>/dev/null || docker run -d --net=host --restart unless-stopped --name gost-bridge ginuerzh/gost:latest -L=:8796 -F="'"$FULL_URL"'"' /etc/rc.local &>/dev/null
 
-unset GOST_USER GOST_PASS USER_ENC PASS_ENC'''
+export HTTP_PROXY="http://127.0.0.1:${GOST_PORT}"
+export HTTPS_PROXY="http://127.0.0.1:${GOST_PORT}"
+export http_proxy="http://127.0.0.1:${GOST_PORT}"
+export https_proxy="http://127.0.0.1:${GOST_PORT}"
+export NO_PROXY="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net"
+export no_proxy="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net"
 
-updated = original[:begin] + replacement + original[finish:]
+source /etc/profile.d/daytona-net.sh
 
-# Check Bash syntax before changing the original file.
-subprocess.run(["bash", "-n"], input=updated, text=True, check=True)
-
-backup = path.with_name(path.name + ".before-no-prompt.bak")
-if backup.exists():
-    raise SystemExit(f"Backup already exists: {backup}; file unchanged.")
-
-shutil.copy2(path, backup)
-path.write_text(updated)
-print(f"Prompt removed. Backup: {backup}")
-PY
+echo ""
+echo -e "\033[1;36m"
+echo " ⡏⢱ ⢀⣀ ⡀⢀ ⣰⡀ ⢀⡀ ⣀⡀ ⢀⣀  ⡷⣸ ⢀⡀ ⣰⡀ ⡀ ⢀ ⢀⡀ ⡀⣀ ⡇⡠  ⣏⡱ ⡀⢀ ⣀⡀ ⢀⣀ ⢀⣀ ⢀⣀ ⢀⡀ ⢀⣸"
+echo " ⠧⠜ ⠣⠼ ⣑⡺ ⠘⠤ ⠣⠜ ⠇⠸ ⠣⠼  ⠇⠹ ⠣⠭ ⠘⠤ ⠱⠱⠃ ⠣⠜ ⠏ ⠏⠢  ⠧⠜ ⣑⡺ ⡧⠜ ⠣⠼ ⠭⠕ ⠭⠕ ⠣⠭ ⠣⠼"
+echo -e "\033[0m"
+echo ""
+echo -e "\033[1;33m╔════════════════════════════════════════════════════════╗\033[0m"
+echo -e "\033[1;33m║\033[0m  \033[1;31m⚠ If network is not working, run this command:\033[0m     \033[1;33m║\033[0m"
+echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
+echo -e "\033[1;33m║\033[0m  \033[1;36msource /etc/profile.d/daytona-net.sh\033[0m                  \033[1;33m║\033[0m"
+echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
+echo -e "\033[1;33m╚════════════════════════════════════════════════════════╝\033[0m"
