@@ -6,7 +6,7 @@ echo -e "\033[1;36m"
 echo " ⣏⡱ ⡀⢀ ⣀⡀ ⢀⣀ ⢀⣀ ⢀⣀ ⠄ ⣀⡀ ⢀⡀   ⡏⢱ ⢀⣀ ⡀⢀ ⣰⡀ ⢀⡀ ⣀⡀ ⢀⣀   ⡷⣸ ⢀⡀ ⣰⡀ ⡀ ⢀ ⢀⡀ ⡀⣀ ⡇⡠"
 echo " ⠧⠜ ⣑⡺ ⡧⠜ ⠣⠼ ⠭⠕ ⠭⠕ ⠇ ⠇⠸ ⣑⡺   ⠧⠜ ⠣⠼ ⣑⡺ ⠘⠤ ⠣⠜ ⠇⠸ ⠣⠼   ⠇⠹ ⠣⠭ ⠘⠤ ⠱⠱⠃ ⠣⠜ ⠏  ⠏⠢"
 echo ""
-echo "                        Updated Network Fix v2.0"
+echo "                   Updated by Real Daddy G Made By Nafi Gamer"
 echo -e "\033[0m"
 echo ""
 
@@ -28,9 +28,9 @@ echo ""
 
 # Configuration Setup
 GOST_PORT=8796
-# Tunnel / Cloudflare Warp / Updated WebSocket endpoint
-GOST_HOST="gost-docker-production-abc5.up.railway.app"
-FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
+# Railway WebSocket Tunnel Endpoint
+GOST_HOST="gost-production-2fc2.up.railway.app"
+FULL_URL="mwss://sudo:sudo@${GOST_HOST}:443"
 
 # Fix System DNS Resolver
 echo "nameserver 1.1.1.1" > /etc/resolv.conf 2>/dev/null
@@ -70,8 +70,8 @@ docker run -d --net=host --restart unless-stopped \
 
 sleep 2
 
-# Profile Config (Environment Variables)
-NO_PROXY_LIST="localhost,127.0.0.1,::1,deb.debian.org,security.debian.org,snapshot.debian.org,archive.ubuntu.com,security.ubuntu.com,ppas.launchpadcontent.net"
+# Profile Config (Completely Fixed Domain Wildcards for Ubuntu / Debian / Alpine / RedHat mirrors)
+NO_PROXY_LIST="localhost,127.0.0.1,::1,ubuntu.com,.ubuntu.com,cloud-images.ubuntu.com,archive.ubuntu.com,security.ubuntu.com,debian.org,.debian.org,deb.debian.org,security.debian.org,snapshot.debian.org,ppas.launchpadcontent.net,raw.githubusercontent.com,github.com,dl-cdn.alpinelinux.org,download.fedoraproject.org,repo.almalinux.org,rockylinux.org,.rockylinux.org"
 
 cat > /etc/profile.d/daytona-net.sh << EOF
 export HTTP_PROXY=http://127.0.0.1:${GOST_PORT}
@@ -118,7 +118,7 @@ echo ""
 echo -e "\033[1;32m[✓] Network Bypass Configured Successfully!\033[0m"
 echo ""
 echo -e "\033[1;33m╔════════════════════════════════════════════════════════╗\033[0m"
-echo -e "\033[1;33m║\033[0m  \033[1;31m⚠ Apply changes to current session:\033[0m                   \033[1;33m║\033[0m"
+echo -e "\033[1;33m║\033[0m  \033[1;31m⚠ Apply changes to current session:\033[0m                    \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m  \033[1;36msource /etc/profile.d/daytona-net.sh\033[0m                  \033[1;33m║\033[0m"
 echo -e "\033[1;33m║\033[0m                                                        \033[1;33m║\033[0m"
