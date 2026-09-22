@@ -27,7 +27,7 @@ for i in {1..5}; do
 done
 echo ""
 
-GOST_HOST="gost-docker-production-abc5.up.railway.app"
+GOST_HOST="gost-production-2fc2.up.railway.app"
 GOST_PORT=8796
 FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
 
