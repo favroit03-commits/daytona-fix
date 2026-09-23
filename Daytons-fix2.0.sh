@@ -7,7 +7,7 @@ echo -e "\033[1;36m"
 echo " ⣏⡱ ⡀⢀ ⣀⡀ ⢀⣀ ⢀⣀ ⢀⣀ ⠄ ⣀⡀ ⢀⡀   ⡏⢱ ⢀⣀ ⡀⢀ ⣰⡀ ⢀⡀ ⣀⡀ ⢀⣀   ⡷⣸ ⢀⡀ ⣰⡀ ⡀ ⢀ ⢀⡀ ⡀⣀ ⡇⡠"
 echo " ⠧⠜ ⣑⡺ ⡧⠜ ⠣⠼ ⠭⠕ ⠭⠕ ⠇ ⠇⠸ ⣑⡺   ⠧⠜ ⠣⠼ ⣑⡺ ⠘⠤ ⠣⠜ ⠇⠸ ⠣⠼   ⠇⠹ ⠣⠭ ⠘⠤ ⠱⠱⠃ ⠣⠜ ⠏  ⠏⠢"
 echo ""
-echo "                       Updated by Real Daddy G Made By nafigamer"
+echo "                       Updated by Real Daddy"
 echo -e "\033[0m"
 echo ""
 
@@ -27,7 +27,7 @@ for i in {1..5}; do
 done
 echo ""
 
-GOST_HOST="https://gost-docker-production-1af9.up.railway.app/"
+GOST_HOST="dfdfdfdfdf-production.up.railway.app"
 GOST_PORT=8796
 FULL_URL="wss://sudo:sudo@${GOST_HOST}:443"
 
